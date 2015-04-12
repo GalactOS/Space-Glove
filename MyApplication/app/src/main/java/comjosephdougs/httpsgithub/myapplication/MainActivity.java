@@ -12,6 +12,8 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
+import java.util.Arrays;
+
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
     public Firebase myFirebaseRef;
@@ -71,13 +73,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         mag = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_FASTEST);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_FASTEST);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_FASTEST);
 
 
     }
@@ -97,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         float[] values = event.values;
         //Log.d(TAG, "" + (event.sensor.getType() == Sensor.TYPE_GYROSCOPE));
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && geoMeasured) {
-
+            accel(values, curGeo);
             geoMeasured = false;
         } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             gyros(values);
@@ -122,8 +124,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         SensorManager.getOrientation(R, result);
 
-
-
+        Log.d(TAG, Arrays.toString(result));
 
         /*
         if (x > 4 || x < -4) {
