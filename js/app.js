@@ -93,7 +93,8 @@ gyr_z.on("value", function(snapshot) {
 });
 
 acc_x.on("value", function(snapshot) {
-	dir.acc_x_val += snapshot.val()
+	dir.acc_x_val += snapshot.val();
+	acc_x.set(0);
 	$("#acc_x").text(dir.acc_x_val);
 });
 
@@ -125,7 +126,7 @@ $(".message").click(function() {
 	$("#message").text("Messages sent!")
 	$("#message").fadeOut( "slow" , function() {
 		$("#message").text("");
-		$("#message").show();git add .
+		$("#message").show();
 	});
 })
 
@@ -247,7 +248,7 @@ onRenderFcts.push(function(delta, now){
 		camera.position.z -= .001
 	}
 	
-	camera.position.x += dir.acc_x / 100;
+	camera.position.x += dir.acc_x_val/ 100;
 	
 	//camera.position.z += (dir.gyr_x_val/100) //- camera.position.z) //* (delta*3)
 	// camera.rotation.x += (dir.gyr_x_val/100 )//- camera.rotation.x) * (delta*3)
