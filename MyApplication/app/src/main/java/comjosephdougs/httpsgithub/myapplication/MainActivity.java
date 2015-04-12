@@ -21,12 +21,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public Button toggle;
     public Button up;
     public Button down;
+    public Button go;
+    public Button stop;
     public String TAG = "Main";
     public Sensor acc;
     public Sensor gyr;
     public Sensor mag;
     public boolean geoMeasured;
-    public float[] curGeo;
+    public int flagx;
 
     public final static String username = "89652cbc-06d6-4e8b-9679-06f40381aaaf";
     public final static String password = "cyI6zx2rKS14";
@@ -39,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         geoMeasured = false;
 
 
-
+        flagx = 0;
 
         setContentView(R.layout.activity_main);
 
@@ -50,6 +52,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         toggle = (Button)findViewById(R.id.Toggle);
         up = (Button)findViewById(R.id.up);
         down = (Button)findViewById(R.id.down);
+        go = (Button)findViewById(R.id.go);
+        stop = (Button)findViewById(R.id.stop);
 
         toggle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -121,6 +125,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 
         Log.d(TAG, Arrays.toString(values));
+
+        /*if (flagx == 0 ) {
+
+
+        }*/
 
         myFirebaseRef.child("acc_x").setValue(x);
         myFirebaseRef.child("acc_y").setValue(y);

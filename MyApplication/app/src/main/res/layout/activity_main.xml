@@ -43,4 +43,22 @@
         android:background="#000000"
         android:textSize="18pt" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GO"
+        android:id="@+id/go"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#00FF00" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STOP"
+        android:id="@+id/stop"
+        android:layout_above="@+id/up"
+        android:layout_centerHorizontal="true"
+        android:textColor="#00FF00" />
+
 </RelativeLayout>
