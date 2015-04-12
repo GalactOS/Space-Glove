@@ -1,18 +1,24 @@
 package comjosephdougs.httpsgithub.myapplication;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
@@ -22,7 +28,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public Button up;
     public Button down;
     public Button go;
-    public Button stop;
+    public Button record;
     public String TAG = "Main";
     public Sensor acc;
     public Sensor gyr;
@@ -30,9 +36,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public boolean geoMeasured;
     public int flagx;
 
+    public boolean goFlag;
+
     public final static String username = "89652cbc-06d6-4e8b-9679-06f40381aaaf";
     public final static String password = "cyI6zx2rKS14";
     public final static String apiURL = "https://stream.watsonplatform.net/speech-to-text-beta/api";
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +49,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         geoMeasured = false;
 
+        goFlag = false;
 
         flagx = 0;
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -53,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         up = (Button)findViewById(R.id.up);
         down = (Button)findViewById(R.id.down);
         go = (Button)findViewById(R.id.go);
-        stop = (Button)findViewById(R.id.stop);
+        record = (Button)findViewById(R.id.stop);
 
         toggle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -74,6 +86,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             public void onClick(View v) {
                 Log.d(TAG, "Send down");
                 myFirebaseRef.child("selection").setValue("down");
+            }
+        });
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Send go");
+                goFlag = !goFlag;
+                myFirebaseRef.child("go").setValue(goFlag);
             }
         });
 
@@ -146,4 +167,43 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         myFirebaseRef.child("gyr_y").setValue(y);
         myFirebaseRef.child("gyr_z").setValue(z);
     }
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Say something!");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    "speech not supported :(",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Receiving speech input
+     * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    //txtSpeechInput.setText(result.get(0));
+                    myFirebaseRef.child("message").setValue(result.get(0));
+                }
+                break;
+            }
+
+        }
+    }
+
 }
