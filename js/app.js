@@ -93,7 +93,7 @@ gyr_z.on("value", function(snapshot) {
 });
 
 acc_x.on("value", function(snapshot) {
-	dir.acc_x_val = Math.round( snapshot.val() * 10) / 10
+	dir.acc_x_val += snapshot.val()
 	$("#acc_x").text(dir.acc_x_val);
 });
 
@@ -246,6 +246,9 @@ onRenderFcts.push(function(delta, now){
 	if(going) {
 		camera.position.z -= .001
 	}
+	
+	camera.position.x += dir.acc_x / 100;
+	
 	//camera.position.z += (dir.gyr_x_val/100) //- camera.position.z) //* (delta*3)
 	// camera.rotation.x += (dir.gyr_x_val/100 )//- camera.rotation.x) * (delta*3)
 	// camera.rotation.y += (dir.gyr_y_val/100 )//- camera.rotation.y) * (delta*3)
