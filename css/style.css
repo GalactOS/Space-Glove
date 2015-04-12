@@ -964,3 +964,25 @@ a.btn:focus{
 	position: fixed;
 	width:50%;
 }
+
+#jetpack {
+	display:none;
+	float:left;
+	left:20px;
+	bottom: 20px;
+	position: fixed;
+	width:50%;
+	color: #00CC00;
+}
+
+#jetpack div {
+}
+
+#jetpack div p {
+	float:left;
+	margin:0px;
+}
+
+#jetpack div div {
+	float:left;
+}
