@@ -1,6 +1,7 @@
 var myFirebaseRef = new Firebase("https://fiery-inferno-6630.firebaseio.com/");
 
-var message = myFirebaseRef.child("selection")
+var message = myFirebaseRef.child("message");
+var selection = myFirebaseRef.child("selection");
 var gyr_x = myFirebaseRef.child("gyr_x");
 var gyr_y = myFirebaseRef.child("gyr_y");
 var gyr_z = myFirebaseRef.child("gyr_z");
@@ -18,6 +19,8 @@ var $first = $('div:first', '#menu'),
 
 dir = {}
 
+var going = false;
+
 dir.gyr_x_val = 0;
 dir.gyr_y_val = 0;
 dir.gyr_z_val = 0;
@@ -25,7 +28,14 @@ dir.acc_x_val = 0;
 dir.acc_y_val = 0;
 dir.acc_z_val = 0;
 
+
 message.on("value", function(snapshot) {
+	if(snapshot.val() != null) {
+		$("#message").text(snapshot.val());
+	}
+});
+
+selection.on("value", function(snapshot) {
   	if(snapshot.val() == "up") {
   		var $prev, $selected = $(".selected");
 
@@ -97,6 +107,10 @@ acc_z.on("value", function(snapshot) {
 	$("#acc_z").text(dir.acc_z_val);
 });
 
+go.on("value", function(snapshot) {
+	going = snapshot.val();
+})
+
 $( ".settings" ).click(function() {
 	console.log("settings");
 	$("#settings").toggle();
@@ -106,6 +120,14 @@ $( ".jetpack_dir" ).click(function() {
 	console.log("jetpack_dir");
 	$("#jetpack").toggle();
 });
+
+$(".message").click(function() {
+	$("#message").text("Messages sent!")
+	$("#message").fadeOut( "slow" , function() {
+		$("#message").text("");
+		$("#message").show();
+	});
+})
 
 var renderer	= new THREE.WebGLRenderer({
 	antialias	: true
@@ -219,6 +241,10 @@ onRenderFcts.push(function(delta, now){
 		camera.rotation.z -=.01;
 	} else if (dir.gyr_y_val <= -1) {
 		camera.rotation.z += .01;
+	}
+
+	if(going) {
+		camera.position.z -= .001
 	}
 	//camera.position.z += (dir.gyr_x_val/100) //- camera.position.z) //* (delta*3)
 	// camera.rotation.x += (dir.gyr_x_val/100 )//- camera.rotation.x) * (delta*3)
