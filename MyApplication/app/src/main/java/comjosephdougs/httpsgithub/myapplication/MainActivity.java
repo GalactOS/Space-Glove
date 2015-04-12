@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -13,10 +12,7 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
@@ -41,7 +37,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
 
         geoMeasured = false;
-        curGeo = null;
 
 
 
@@ -59,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         toggle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 myFirebaseRef.child("selection").setValue("Toggle");
-                new CallAPI().execute(apiURL );
+                //new CallAPI().execute(apiURL );
             }
         });
 
@@ -80,18 +75,18 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         sMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        acc = sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        acc = sMgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         gyr = sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mag = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        //mag = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sMgr.registerListener(this,
-                sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                sMgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
                 SensorManager.SENSOR_DELAY_NORMAL);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
                 SensorManager.SENSOR_DELAY_NORMAL);
-        sMgr.registerListener(this,
-                sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-                SensorManager.SENSOR_DELAY_NORMAL);
+        //sMgr.registerListener(this,
+          //      sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+            //    SensorManager.SENSOR_DELAY_NORMAL);
 
 
     }
@@ -110,64 +105,30 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //SensorManager.getOrientation();
 
         float[] values = event.values;
-        //Log.d(TAG, "" + (event.sensor.getType() == Sensor.TYPE_GYROSCOPE));
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && geoMeasured) {
-            accel(values, curGeo);
-            geoMeasured = false;
-        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+
+        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            accel(values);
+        } else {
             gyros(values);
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            curGeo = values;
-            geoMeasured = true;
         }
+
     }
 
-    private void accel(float[] values, float[] geoValues) {
+    private void accel(float[] values) {
         float x = values[0];
         float y = values[1];
         float z = values[2];
 
-        float[] R = new float[9];
-        float[] I = new float[9];
 
+        Log.d(TAG, Arrays.toString(values));
 
-        SensorManager.getRotationMatrix(R, null, values, geoValues);
-
-        float[] result = new float[3];
-
-        SensorManager.getOrientation(R, result);
-
-        //Log.d(TAG, Arrays.toString(result));
-
-        //float psi = (float)Math.abs((double)result[0]);
-        //float theta = (float)Math.abs((double)result[1]);
-        //float phi = (float)Math.abs((double)result[2]);
-
-        //y = y * (float)(Math.cos((double)theta) * Math.cos((double)phi));
-        //z = z * (float)(Math.sin((double)theta) * Math.sin((double)phi));
         myFirebaseRef.child("acc_x").setValue(x);
         myFirebaseRef.child("acc_y").setValue(y);
-        myFirebaseRef.child("acc_z").setValue(z - 9.81);
+        myFirebaseRef.child("acc_z").setValue(z);
 
-        /*
-        if (x > 4 || x < -4) {
-            Log.d(TAG, "acc_x " + x);
-            myFirebaseRef.child("acc_x").setValue(x);
-        }
-
-        if (y > 4 || y < -4) {
-            Log.d(TAG, "acc_y " + y);
-            myFirebaseRef.child("acc_y").setValue(y);
-        }
-
-        if (z > 2 || z < -2) {
-            Log.d(TAG, "acc_z " + z);
-            myFirebaseRef.child("acc_z").setValue(z);
-        }*/
     }
 
     private void gyros(float[] values){
-        //Log.d(TAG, "values: " + Arrays.toString(values));
         float x = values[0];
         float y = values[1];
         float z = values[2];
@@ -175,57 +136,5 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         myFirebaseRef.child("gyr_x").setValue(x);
         myFirebaseRef.child("gyr_y").setValue(y);
         myFirebaseRef.child("gyr_z").setValue(z);
-
-        /*
-        if (x > 4 || x < -4) {
-            Log.d(TAG, "gyr_x " + x);
-            myFirebaseRef.child("gyr_x").setValue(x);
-        }
-        if (y > 4 || y < -4) {
-            Log.d(TAG, "gyr_y " + y);
-            myFirebaseRef.child("gyr_y").setValue(y);
-        }
-        if (z > 4 || z < -4) {
-            Log.d(TAG, "gyr_z " + z);
-            myFirebaseRef.child("gyr_z").setValue(z);
-        }*/
-    }
-
-    private class CallAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String urlString=params[0]; // URL to call
-
-            String resultToDisplay = "";
-
-            InputStream in = null;
-
-            // HTTP Get
-            try {
-
-                URL url = new URL(urlString);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                in = new BufferedInputStream(urlConnection.getInputStream());
-
-            } catch (Exception e ) {
-
-                System.out.println(e.getMessage());
-
-                return e.getMessage();
-
-            }
-
-            return resultToDisplay;
-
-        }
-
-        protected void onPostExecute(String result) {
-
-        }
-
     }
 }
