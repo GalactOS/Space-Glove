@@ -209,7 +209,7 @@ onRenderFcts.push(function(delta, now){
 		camera.rotation.x +=.01;
 	} else if (dir.gyr_x_val <= -1) {
 		camera.rotation.x -= .01;
-	}
+	} 
 	if(dir.gyr_z_val >= 1) {
 		camera.rotation.y +=.01;
 	} else if (dir.gyr_z_val <= -1) {
