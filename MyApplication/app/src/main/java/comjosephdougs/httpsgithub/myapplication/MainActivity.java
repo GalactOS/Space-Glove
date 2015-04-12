@@ -33,6 +33,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         geoMeasured = false;
         curGeo = null;
 
+
+
+
         setContentView(R.layout.activity_main);
 
         Firebase.setAndroidContext(this);
@@ -44,11 +47,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         down = (Button)findViewById(R.id.down);
 
         toggle.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
                 myFirebaseRef.child("selection").setValue("Toggle");
+
             }
         });
+
 
         up.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -81,6 +85,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -141,10 +146,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             Log.d(TAG, "acc_y " + y);
             myFirebaseRef.child("acc_y").setValue(y);
         }*/
+        /*
         if (z > 2 || z < -2) {
             Log.d(TAG, "acc_z " + z);
             myFirebaseRef.child("acc_z").setValue(z);
-        }
+        }*/
     }
 
     private void gyros(float[] values){
@@ -166,4 +172,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             myFirebaseRef.child("gyr_z").setValue(z);
         }*/
     }
+
+    //public class CallAPI throws  throws ClientProtocolException, IOException
 }
