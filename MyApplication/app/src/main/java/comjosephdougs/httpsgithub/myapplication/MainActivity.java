@@ -147,7 +147,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //z = z * (float)(Math.sin((double)theta) * Math.sin((double)phi));
         myFirebaseRef.child("acc_x").setValue(x);
         myFirebaseRef.child("acc_y").setValue(y);
-        myFirebaseRef.child("acc_z").setValue(z);
+        myFirebaseRef.child("acc_z").setValue(z - 9.81);
 
         /*
         if (x > 4 || x < -4) {
