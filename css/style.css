@@ -948,8 +948,8 @@ a.btn:focus{
 	}
 }
 
-.selected {
-	background-color: red;
+.selected a {
+	background-color: #00CC00;
 }
 
 #hud {
@@ -961,6 +961,6 @@ a.btn:focus{
 	display:none;
 	float:left;
 	left:0px;
-	position: relative;
+	position: fixed;
 	width:50%;
 }
