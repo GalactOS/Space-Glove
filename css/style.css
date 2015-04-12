@@ -558,87 +558,6 @@ section#intro {
     border-color: #fff;
 }
 
-/* ===========================
---- About
-============================ */
-
-
-
-
-/* ===========================
---- Services
-============================ */
-.service-box {
-	background: #fff;
-	border: 1px solid #f7f7f7;
-	padding: 20px;
-}
-
-.service-icon {
-	margin-bottom: 20px;
-}	
-
-
-/* ===========================
---- Works
-============================ */
-
-#owl-works {
-
-}
-
-.item {
-    margin: 10px;
-}
-
-.item img {
-    display: block;
-    width: 100%;
-    height: auto;
-}	
-
-/* ===========================
---- Contact
-============================ */
-
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-form#contact-form .form-group label {
-	text-align: left !important;
-	display: block;
-	text-transform: uppercase;
-	font-size: 16px;
-}
-form#contact-form input,form#contact-form select,form#contact-form textarea {
-	font-size: 18px;
-	line-height: 1.6em;
-	border: 1px solid #eee;
-  -webkit-box-shadow: none;
-          box-shadow:  none;
-	border-radius: 2px;
-}
-
-.btn-lg,
-.btn-group-lg > .btn {
-  border-radius: 2px;
-}
-
-form#contact-form input:focus,form#contact-form select:focus,form#contact-form textarea:focus {
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-}
-.input-group-addon {
-  background-color: #fefefe;
-  border: 1px solid #eee;
-}
-
-.widget-contact {
-	text-align: left;
-}
-
 
 
 /* ===========================
@@ -1027,4 +946,21 @@ a.btn:focus{
 	.navbar.navbar-custom.navbar-fixed-top {
 		margin-bottom: 30px;
 	}
+}
+
+.selected {
+	background-color: red;
+}
+
+#hud {
+	height:100vh;
+	width:100%;
+}
+
+#settings {
+	display:none;
+	float:left;
+	left:0px;
+	position: relative;
+	width:50%;
 }
