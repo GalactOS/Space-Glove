@@ -12,8 +12,6 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
-import java.util.Arrays;
-
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
     public Firebase myFirebaseRef;
@@ -112,7 +110,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private void accel(float[] values, float[] geoValues) {
         float x = values[0];
         float y = values[1];
-        float z = values[2] - SensorManager.STANDARD_GRAVITY;
+        float z = values[2];
 
         float[] R = new float[9];
         float[] I = new float[9];
@@ -124,21 +122,29 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         SensorManager.getOrientation(R, result);
 
-        Log.d(TAG, Arrays.toString(result));
+        //Log.d(TAG, Arrays.toString(result));
 
-        /*
-        if (x > 4 || x < -4) {
+        float psi = (float)Math.abs((double)result[0]);
+        float theta = (float)Math.abs((double)result[1]);
+        float phi = (float)Math.abs((double)result[2]);
+
+        y = y * (float)(Math.cos((double)theta) * Math.cos((double)phi));
+        z = z * (float)(Math.sin((double)theta) * Math.sin((double)phi));
+
+
+        /*if (x > 4 || x < -4) {
             Log.d(TAG, "acc_x " + x);
             myFirebaseRef.child("acc_x").setValue(x);
-        }
-        if (y > 4 || y < -4) {
+        }*/
+
+        /*if (y > 4 || y < -4) {
             Log.d(TAG, "acc_y " + y);
             myFirebaseRef.child("acc_y").setValue(y);
-        }
-        if (z > 4 || z < -4) {
+        }*/
+        if (z > 2 || z < -2) {
             Log.d(TAG, "acc_z " + z);
             myFirebaseRef.child("acc_z").setValue(z);
-        }*/
+        }
     }
 
     private void gyros(float[] values){
