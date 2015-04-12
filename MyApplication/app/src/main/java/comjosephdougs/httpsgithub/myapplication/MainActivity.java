@@ -17,9 +17,7 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
-
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
     public Firebase myFirebaseRef;
@@ -35,6 +33,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public Sensor mag;
     public boolean geoMeasured;
     public int flagx;
+    public int flagy;
+    public int flagz;
 
     public boolean goFlag;
 
@@ -52,6 +52,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         goFlag = false;
 
         flagx = 0;
+        flagy = 0;
+        flagz = 0;
 
 
 
@@ -98,6 +100,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             }
         });
 
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promptSpeechInput();
+            }
+        });
+
         sMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         acc = sMgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -105,7 +114,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //mag = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_FASTEST);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
                 SensorManager.SENSOR_DELAY_NORMAL);
@@ -138,24 +147,51 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
 
     }
-
+    //CHANGE SENSOR DELAY TO VERY FAST AGAIN
     private void accel(float[] values) {
         float x = values[0];
         float y = values[1];
         float z = values[2];
 
 
-        Log.d(TAG, Arrays.toString(values));
+        //Log.d(TAG, Arrays.toString(values));
 
-        /*if (flagx == 0 ) {
+        if (flagx == 0 && (x > 6 || x < -6)) {
+            flagx = (int)Math.signum(x);//the sign of x
+            myFirebaseRef.child("acc_x").setValue(flagx);
+            Log.d(TAG, "x: " + flagx);
+        } else if ((flagx == 1 || flagx == -1) && x * flagx < 0) {
+            flagx = 2 * (int)Math.signum(x);// set flag to second stage
+        } else if ((flagx == 2 || flagx == -2) && x * flagx < 0) { //
+            flagx = 0; // reset flag
+        }
+
+        if (flagy == 0 && (y > 6 || y < -6)) {
+            flagy = (int)Math.signum(y);//the sign of x
+            myFirebaseRef.child("acc_y").setValue(flagy);
+            Log.d(TAG, "y: " + flagy);
+        } else if ((flagy == 1 || flagy == -1) && y * flagy < 0) {
+            flagy = 2 * (int)Math.signum(y);// set flag to second stage
+        } else if ((flagy == 2 || flagy == -2) && y * flagy < 0) { //
+            flagy = 0; // reset flag
+        }
+
+        if (flagz == 0 && (z > 6 || z < -6)) {
+            flagz = (int)Math.signum(z);//the sign of x
+            myFirebaseRef.child("acc_z").setValue(flagz);
+            Log.d(TAG, "z: " + flagz);
+        } else if ((flagz == 1 || flagz == -1) && z * flagz < 0) {
+            flagz = 2 * (int)Math.signum(z);// set flag to second stage
+        } else if ((flagz == 2 || flagz == -2) && z * flagz < 0) { //
+            flagz = 0; // reset flag
+        }
 
 
-        }*/
-
+        /*
         myFirebaseRef.child("acc_x").setValue(x);
         myFirebaseRef.child("acc_y").setValue(y);
         myFirebaseRef.child("acc_z").setValue(z);
-
+        */
     }
 
     private void gyros(float[] values){
