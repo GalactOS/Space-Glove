@@ -247,7 +247,7 @@ onRenderFcts.push(function(delta, now){
 		camera.position.z -= .001
 	}
 	
-	camera.position.x += dir.acc_x / 100;
+	camera.position.x += dir.acc_x_val / 100;
 	
 	//camera.position.z += (dir.gyr_x_val/100) //- camera.position.z) //* (delta*3)
 	// camera.rotation.x += (dir.gyr_x_val/100 )//- camera.rotation.x) * (delta*3)
