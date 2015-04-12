@@ -125,7 +125,7 @@ $(".message").click(function() {
 	$("#message").text("Messages sent!")
 	$("#message").fadeOut( "slow" , function() {
 		$("#message").text("");
-		$("#message").show();
+		$("#message").show();git add .
 	});
 })
 
