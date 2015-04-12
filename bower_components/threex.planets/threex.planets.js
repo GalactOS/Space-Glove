@@ -2,9 +2,11 @@ var THREEx = THREEx || {}
 
 THREEx.Planets	= {}
 
-THREEx.Planets.baseURL	= '../'
+THREEx.Planets.baseURL	= 'bower_components/threex.planets/'
 
 // from http://planetpixelemporium.com/
+
+console.log(THREEx.Planets.baseURL + 'images/sunmap.jpg');
 
 THREEx.Planets.createSun	= function(){
 	var geometry	= new THREE.SphereGeometry(0.5, 32, 32)
