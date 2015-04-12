@@ -12,8 +12,6 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
-import java.util.Arrays;
-
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
     public Firebase myFirebaseRef;
@@ -117,24 +115,30 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
 
     }
-
+    //CHANGE SENSOR DELAY TO VERY FAST AGAIN
     private void accel(float[] values) {
         float x = values[0];
         float y = values[1];
         float z = values[2];
 
 
-        Log.d(TAG, Arrays.toString(values));
+        //Log.d(TAG, Arrays.toString(values));
 
-        /*if (flagx == 0 ) {
+        if (flagx == 0 && (x > 4 || x < -4)) {
+            flagx = (int)Math.signum(x);
+            myFirebaseRef.child("acc_x").setValue(flagx);
+            Log.d(TAG, "" + flagx);
+        } else if ((flagx == 1 || flagx == -1) && x * flagx < 0) { // set flag to second stage
+            flagx = 2 * (int)Math.signum(x);
+        } else if ((flagx == 2 || flagx == -2) && x * flagx < 0) {
+            flagx = 0;
+        }
 
-
-        }*/
-
+        /*
         myFirebaseRef.child("acc_x").setValue(x);
         myFirebaseRef.child("acc_y").setValue(y);
         myFirebaseRef.child("acc_z").setValue(z);
-
+        */
     }
 
     private void gyros(float[] values){
