@@ -14,13 +14,14 @@ var myFirebaseRef = new Firebase("https://fiery-inferno-6630.firebaseio.com/");
 		var $first = $('div:first', '#menu'),
 	    	$last = $('div:last', '#menu');
 
-	    var gyr_x_val = 0;
-	    var gyr_y_val = 0;
-	    var gyr_z_val = 0;
+	    dir = {}
 
-	    var acc_x_val = 0;
-	    var acc_y_val = 0;
-	    var acc_z_val = 0;
+	    dir.gyr_x_val = 0;
+	    dir.gyr_y_val = 0;
+	    dir.gyr_z_val = 0;
+	    dir.acc_x_val = 0;
+	    dir.acc_y_val = 0;
+	    dir.acc_z_val = 0;
 		
 		message.on("value", function(snapshot) {
 		  	if(snapshot.val() == "up") {
@@ -44,33 +45,33 @@ var myFirebaseRef = new Firebase("https://fiery-inferno-6630.firebaseio.com/");
 		});
 
 		gyr_x.on("value", function(snapshot) {
-			gyr_x_val = snapshot.val();
-			$("#gyr_x").text(gyr_x_val);
+			dir.gyr_x_val = snapshot.val();
+			$("#gyr_x").text(dir.gyr_x_val);
 		});
 
 		gyr_y.on("value", function(snapshot) {
-			gyr_y_val = snapshot.val();
-			$("#gyr_y").text(gyr_y_val);
+			dir.gyr_y_val = snapshot.val();
+			$("#gyr_y").text(dir.gyr_y_val);
 		});
 
 		gyr_z.on("value", function(snapshot) {
-			gyr_z_val = snapshot.val();
-			$("#gyr_z").text(gyr_z_val);
+			dir.gyr_z_val = snapshot.val();
+			$("#gyr_z").text(dir.gyr_z_val);
 		});
 
 		acc_x.on("value", function(snapshot) {
-			acc_x_val = snapshot.val();
-			$("#acc_x").text(acc_x_val);
+			dir.acc_x_val = snapshot.val();
+			$("#acc_x").text(dir.acc_x_val);
 		});
 
 		acc_y.on("value", function(snapshot) {
-			acc_y_val = snapshot.val();
-			$("#acc_y").text(acc_y_val);
+			dir.acc_y_val = snapshot.val();
+			$("#acc_y").text(dir.acc_y_val);
 		});
 
 		acc_z.on("value", function(snapshot) {
-			acc_z_val = snapshot.val();
-			$("#acc_z").text(acc_z_val);
+			dir.acc_z_val = snapshot.val();
+			$("#acc_z").text(dir.acc_z_val);
 		});
 
 		$( ".settings" ).click(function() {
@@ -173,14 +174,14 @@ var myFirebaseRef = new Firebase("https://fiery-inferno-6630.firebaseio.com/");
 		//////////////////////////////////////////////////////////////////////////////////
 		//		Camera Controls							//
 		//////////////////////////////////////////////////////////////////////////////////
-		var mouse	= {x : 0, y : 0}
-		document.addEventListener('mousemove', function(event){
-			mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-			mouse.y	= (event.clientY / window.innerHeight) - 0.5
-		}, false)
+		// var mouse	= {x : 0, y : 0}
+		// document.addEventListener('mousemove', function(event){
+		// 	mouse.x	= (dir.gyr_x_val / window.innerWidth ) - 0.5
+		// 	mouse.y	= (dir.gyr_y_val / window.innerHeight) - 0.5
+		// }, false)
 		onRenderFcts.push(function(delta, now){
-			camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
-			camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3)
+			camera.position.x += (dir.gyr_x_val/5 - camera.position.x) * (delta*3)
+			camera.position.y += (dir.gyr_y_val/5 - camera.position.y) * (delta*3)
 			// camera.position.x += (gyr_x*5 - camera.position.x) * (delta*3);
 			// camera.position.y += (gyr_y*5 - camera.position.y) * (delta*3);
 			camera.lookAt( scene.position )
