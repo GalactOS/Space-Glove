@@ -12,6 +12,8 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
+import java.util.Arrays;
+
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
     public Firebase myFirebaseRef;
@@ -26,12 +28,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public boolean geoMeasured;
     public float[] curGeo;
 
+    public final static String username = "89652cbc-06d6-4e8b-9679-06f40381aaaf";
+    public final static String password = "cyI6zx2rKS14";
+    public final static String apiURL = "https://stream.watsonplatform.net/speech-to-text-beta/api";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         geoMeasured = false;
-        curGeo = null;
 
 
 
@@ -49,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         toggle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 myFirebaseRef.child("selection").setValue("Toggle");
-
+                //new CallAPI().execute(apiURL );
             }
         });
 
@@ -70,18 +75,18 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         sMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        acc = sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        acc = sMgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         gyr = sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mag = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        //mag = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sMgr.registerListener(this,
-                sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_FASTEST);
+                sMgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+                SensorManager.SENSOR_DELAY_NORMAL);
         sMgr.registerListener(this,
                 sMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
-                SensorManager.SENSOR_DELAY_FASTEST);
-        sMgr.registerListener(this,
-                sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-                SensorManager.SENSOR_DELAY_FASTEST);
+                SensorManager.SENSOR_DELAY_NORMAL);
+        //sMgr.registerListener(this,
+          //      sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+            //    SensorManager.SENSOR_DELAY_NORMAL);
 
 
     }
@@ -100,78 +105,36 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //SensorManager.getOrientation();
 
         float[] values = event.values;
-        //Log.d(TAG, "" + (event.sensor.getType() == Sensor.TYPE_GYROSCOPE));
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && geoMeasured) {
-            accel(values, curGeo);
-            geoMeasured = false;
-        } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            accel(values);
+        } else {
             gyros(values);
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            curGeo = values;
-            geoMeasured = true;
         }
+
     }
 
-    private void accel(float[] values, float[] geoValues) {
+    private void accel(float[] values) {
         float x = values[0];
         float y = values[1];
         float z = values[2];
 
-        float[] R = new float[9];
-        float[] I = new float[9];
 
+        Log.d(TAG, Arrays.toString(values));
 
-        SensorManager.getRotationMatrix(R, null, values, geoValues);
+        myFirebaseRef.child("acc_x").setValue(x);
+        myFirebaseRef.child("acc_y").setValue(y);
+        myFirebaseRef.child("acc_z").setValue(z);
 
-        float[] result = new float[3];
-
-        SensorManager.getOrientation(R, result);
-
-        //Log.d(TAG, Arrays.toString(result));
-
-        float psi = (float)Math.abs((double)result[0]);
-        float theta = (float)Math.abs((double)result[1]);
-        float phi = (float)Math.abs((double)result[2]);
-
-        y = y * (float)(Math.cos((double)theta) * Math.cos((double)phi));
-        z = z * (float)(Math.sin((double)theta) * Math.sin((double)phi));
-
-
-        /*if (x > 4 || x < -4) {
-            Log.d(TAG, "acc_x " + x);
-            myFirebaseRef.child("acc_x").setValue(x);
-        }*/
-
-        /*if (y > 4 || y < -4) {
-            Log.d(TAG, "acc_y " + y);
-            myFirebaseRef.child("acc_y").setValue(y);
-        }*/
-        /*
-        if (z > 2 || z < -2) {
-            Log.d(TAG, "acc_z " + z);
-            myFirebaseRef.child("acc_z").setValue(z);
-        }*/
     }
 
     private void gyros(float[] values){
-        //Log.d(TAG, "values: " + Arrays.toString(values));
         float x = values[0];
         float y = values[1];
         float z = values[2];
-        /*
-        if (x > 4 || x < -4) {
-            Log.d(TAG, "gyr_x " + x);
-            myFirebaseRef.child("gyr_x").setValue(x);
-        }
-        if (y > 4 || y < -4) {
-            Log.d(TAG, "gyr_y " + y);
-            myFirebaseRef.child("gyr_y").setValue(y);
-        }
-        if (z > 4 || z < -4) {
-            Log.d(TAG, "gyr_z " + z);
-            myFirebaseRef.child("gyr_z").setValue(z);
-        }*/
-    }
 
-    //public class CallAPI throws  throws ClientProtocolException, IOException
+        myFirebaseRef.child("gyr_x").setValue(x);
+        myFirebaseRef.child("gyr_y").setValue(y);
+        myFirebaseRef.child("gyr_z").setValue(z);
+    }
 }
