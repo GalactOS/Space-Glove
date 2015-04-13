@@ -11,6 +11,8 @@ var acc_z = myFirebaseRef.child("acc_z");
 
 var go = myFirebaseRef.child("go");
 
+var reset = myFirebaseRef.child("reset");
+
 var $right = $(".glyphicon-chevron-right");
 var $left = $(".glyphicon-chevron-left");
 
@@ -112,6 +114,11 @@ acc_z.on("value", function(snapshot) {
 
 go.on("value", function(snapshot) {
 	going = snapshot.val();
+})
+
+reset.on("value", function(snapshot) {
+	resetVals();
+	reset.set(null);
 })
 
 $( ".settings" ).click(function() {
@@ -263,6 +270,8 @@ onRenderFcts.push(function(delta, now){
 	// camera.position.x += (gyr_x*5 - camera.position.x) * (delta*3);
 	// camera.position.y += (gyr_y*5 - camera.position.y) * (delta*3);
 	//camera.lookAt( scene.position )
+
+
 })
 //////////////////////////////////////////////////////////////////////////////////
 //		render the scene						//
@@ -270,6 +279,20 @@ onRenderFcts.push(function(delta, now){
 onRenderFcts.push(function(){
 	renderer.render( scene, camera );		
 })
+
+var resetVals = function() {
+	camera.position.x = 0;
+	camera.position.y = 0;
+	camera.position.z = 0;
+	camera.rotation.x = 0;
+	camera.rotation.y = 0;
+	camera.rotation.z = 0;
+	for (var property in dir) {
+	    if (dir.hasOwnProperty(property)) {
+	        dir[property] = 0;
+	    }
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 //		loop runner							//

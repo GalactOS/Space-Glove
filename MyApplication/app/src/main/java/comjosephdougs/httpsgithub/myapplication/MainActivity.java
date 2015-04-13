@@ -27,6 +27,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public Button down;
     public Button go;
     public Button record;
+    public Button reset;
     public String TAG = "Main";
     public Sensor acc;
     public Sensor gyr;
@@ -68,6 +69,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         down = (Button)findViewById(R.id.down);
         go = (Button)findViewById(R.id.go);
         record = (Button)findViewById(R.id.stop);
+        reset = (Button)findViewById(R.id.reset);
 
         toggle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -104,6 +106,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 promptSpeechInput();
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myFirebaseRef.child("reset").setValue("reset");
             }
         });
 
