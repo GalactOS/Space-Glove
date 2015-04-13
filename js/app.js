@@ -93,17 +93,20 @@ gyr_z.on("value", function(snapshot) {
 });
 
 acc_x.on("value", function(snapshot) {
-	dir.acc_x_val += snapshot.val()
+	dir.acc_x_val += snapshot.val();
+	acc_x.set(0);
 	$("#acc_x").text(dir.acc_x_val);
 });
 
 acc_y.on("value", function(snapshot) {
-	dir.acc_y_val = Math.round( snapshot.val() * 10) / 10
+	dir.acc_y_val += snapshot.val();
+	acc_y.set(0);
 	$("#acc_y").text(dir.acc_y_val);
 });
 
 acc_z.on("value", function(snapshot) {
-	dir.acc_z_val = Math.round( snapshot.val() * 10) / 10
+	dir.acc_z_val += snapshot.val();
+	acc_z.set(0);
 	$("#acc_z").text(dir.acc_z_val);
 });
 
@@ -248,6 +251,9 @@ onRenderFcts.push(function(delta, now){
 	}
 	
 	camera.position.x += dir.acc_x_val / 100;
+	camera.position.y += dir.acc_y_val / 100;
+	camera.position.z += dir.acc_z_val / 100;
+
 	
 	//camera.position.z += (dir.gyr_x_val/100) //- camera.position.z) //* (delta*3)
 	// camera.rotation.x += (dir.gyr_x_val/100 )//- camera.rotation.x) * (delta*3)
