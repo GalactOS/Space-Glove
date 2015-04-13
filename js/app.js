@@ -55,7 +55,7 @@ selection.on("value", function(snapshot) {
   		$selected = $(".selected");
   		$selected.click();
   	}
-  	message.set(null);
+  	selection.set(null);
 });
 
 gyr_x.on("value", function(snapshot) {
@@ -117,8 +117,11 @@ go.on("value", function(snapshot) {
 })
 
 reset.on("value", function(snapshot) {
-	resetVals();
-	reset.set(null);
+	if(snapshot.val() != null) {
+		console.log("RESET");
+		resetVals();
+		reset.set(null);
+	}
 })
 
 $( ".settings" ).click(function() {
@@ -238,28 +241,28 @@ onRenderFcts.push(function(delta, now){
 	//camera.position.x -= (dir.acc_x_val/100 )//- camera.position.x) * (delta*3)
 	//camera.position.y -= (dir.acc_z_val/100) //- camera.position.y) * (delta*3)
 	if(dir.gyr_x_val >= 1) {
-		camera.rotation.x +=.01;
+		camera.rotation.x +=.005;
 	} else if (dir.gyr_x_val <= -1) {
-		camera.rotation.x -= .01;
+		camera.rotation.x -= .005;
 	} 
 	if(dir.gyr_z_val >= 1) {
-		camera.rotation.y +=.01;
+		camera.rotation.y +=.005;
 	} else if (dir.gyr_z_val <= -1) {
-		camera.rotation.y -= .01;
+		camera.rotation.y -= .005;
 	}
 	if(dir.gyr_y_val >= 1) {
-		camera.rotation.z -=.01;
+		camera.rotation.z -=.005;
 	} else if (dir.gyr_y_val <= -1) {
-		camera.rotation.z += .01;
+		camera.rotation.z += .005;
 	}
 	/*
 	if(going) {
 		camera.position.z -= .001
 	}*/
 	
-	camera.position.x += dir.acc_x_val / 10000;
-	camera.position.y += dir.acc_y_val / 10000;
-	camera.position.z += dir.acc_z_val / 10000;
+	camera.position.x += dir.acc_x_val / 1000;
+	camera.position.z -= dir.acc_y_val / 1000;
+	camera.position.y += dir.acc_z_val / 1000;
 
 	
 	//camera.position.z += (dir.gyr_x_val/100) //- camera.position.z) //* (delta*3)
@@ -269,7 +272,7 @@ onRenderFcts.push(function(delta, now){
 	
 	// camera.position.x += (gyr_x*5 - camera.position.x) * (delta*3);
 	// camera.position.y += (gyr_y*5 - camera.position.y) * (delta*3);
-	//camera.lookAt( scene.position )
+	camera.lookAt( scene.position )
 
 
 })
@@ -283,7 +286,7 @@ onRenderFcts.push(function(){
 var resetVals = function() {
 	camera.position.x = 0;
 	camera.position.y = 0;
-	camera.position.z = 0;
+	camera.position.z = 1;
 	camera.rotation.x = 0;
 	camera.rotation.y = 0;
 	camera.rotation.z = 0;
