@@ -46,7 +46,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GO"
+        android:text="THROTTLE"
         android:id="@+id/go"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -55,10 +55,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="STOP"
+        android:text="MESSAGE"
         android:id="@+id/stop"
-        android:layout_above="@+id/up"
-        android:layout_centerHorizontal="true"
-        android:textColor="#00FF00" />
+        android:textColor="#00FF00"
+        android:layout_below="@+id/down"
+        android:layout_alignRight="@+id/go"
+        android:layout_alignEnd="@+id/go"
+        android:layout_marginTop="36dp"/>
 
 </RelativeLayout>
