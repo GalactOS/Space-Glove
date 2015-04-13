@@ -986,3 +986,7 @@ a.btn:focus{
 #jetpack div div {
 	float:left;
 }
+
+audio {
+	display:none;
+}
